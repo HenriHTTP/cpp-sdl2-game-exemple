@@ -2,45 +2,31 @@
 
 namespace core {
 
-// bool init_SDL() {
-//   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-//     std::cerr << "ERRO: Falha na inicialização do SDL: " << std::endl;
-//     return false;
-//   }
-//   return true;
-// }
+void core_rgb::set_rgb(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+  this->red = r;
+  this->green = g;
+  this->blue = b;
+  this->alpha = a;
+}
 
-// bool create_window(SDL_Window*& window, const int& width, const int& height)
-// {
-//   window =
-//       SDL_CreateWindow("Minha Janela", SDL_WINDOWPOS_CENTERED,
-//                        SDL_WINDOWPOS_CENTERED, width, height,
-//                        SDL_WINDOW_SHOWN);
-//   if (window == nullptr) {
-//     std::cerr << "ERRO: Falha ao criar a janela SDL: " << std::endl;
-//     return false;
-//   }
-//   return true;
-// }
+Uint8 core_rgb::get_red() const { return this->red; }
+Uint8 core_rgb::get_green() const { return this->green; }
+Uint8 core_rgb::get_blue() const { return this->blue; }
+Uint8 core_rgb::get_alpha() const { return this->alpha; }
 
-// void set_backgroud_color(SDL_Renderer* renderer, Uint8 red, Uint8 green,
-//                          Uint8 blue) {
-//   SDL_SetRenderDrawColor(renderer, red, green, blue, 255);
-//   SDL_RenderClear(renderer);
-// }
+void core_running::set_running(bool new_state) { this->running = new_state; }
+bool core_running::get_running() const { return this->running; }
 
-// void render_frame(SDL_Renderer* renderer, int x, int y, int width, int
-// height,
-//                   int red, int green, int blue) {
-//   SDL_Rect frame_react{x, y, width, height};
-//   SDL_SetRenderDrawColor(renderer, red, green, blue, 255);
-//   SDL_RenderFillRect(renderer, &frame_react);
-// }
+void core_screen::set_resolution(int w, int h) {
+  this->width = w;
+  this->height = h;
+}
 
-// void close(SDL_Window* window) {
-//   SDL_DestroyWindow(window);
-//   SDL_Quit();
-// }
+void core_screen::set_width(int w) { this->width = w; }
+void core_screen::set_height(int h) { this->height = h; }
+
+int core_screen::get_width() const { return this->width; }
+int core_screen::get_height() const { return this->height; }
 
 bool core_sdl2::init_sdl2() {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -54,10 +40,10 @@ bool core_sdl2::init_sdl2() {
 }
 
 bool core_sdl2::create_sdl2_window(core_renderer& renderer,
-                                   core_screen& screen) {
+                                   std::shared_ptr<core_screen> screen) {
   renderer.window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED,
-                                     SDL_WINDOWPOS_UNDEFINED, screen.width,
-                                     screen.height, SDL_WINDOW_SHOWN);
+                                     SDL_WINDOWPOS_UNDEFINED, screen->get_width(),
+                                     screen->get_height(), SDL_WINDOW_SHOWN);
 
   if (renderer.window == nullptr) {
     std::cerr << "Failed: error on create SDL2 window" << '\n';
@@ -84,8 +70,10 @@ bool core_sdl2::create_sdl2_window(core_renderer& renderer,
   return true;
 }
 
-void core_sdl2::background_color_sdl2(core_renderer& renderer, core_rgb& rgb) {
-  SDL_SetRenderDrawColor(renderer.renderer, rgb.red, rgb.green, rgb.blue, 255);
+void core_sdl2::background_color_sdl2(core_renderer& renderer,
+                                      std::shared_ptr<core_rgb> rgb) {
+  SDL_SetRenderDrawColor(renderer.renderer, rgb->get_red(), rgb->get_green(),
+                         rgb->get_blue(), rgb->get_alpha());
   SDL_RenderClear(renderer.renderer);
   SDL_RenderPresent(renderer.renderer);
 }
