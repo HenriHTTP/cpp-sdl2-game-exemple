@@ -50,8 +50,10 @@ int main() {
   // } loop;
 
   core::core_renderer render;
-  core::core_running loop;
-  core::core_screen screen;
+  // core::core_screen screen;
+
+  std::shared_ptr<core::core_screen> screen =
+      std::make_shared<core::core_screen>(1280,720);
 
   // core::core_sdl2* app = new core::core_sdl2;
   std::shared_ptr<core::core_sdl2> app = std::make_shared<core::core_sdl2>();
@@ -61,17 +63,16 @@ int main() {
   } else {
     std::cerr << "Menssage: sucess to init SDL2" << '\n';
   }
-  // screen attributes
-  screen.width = 1280;
-  screen.height = 720;
+
 
   app->create_sdl2_window(render, screen);
-  std::cerr << screen.width << std::endl;
+  std::cerr << screen->get_width() << std::endl;
 
-  core::core_rgb rgb;
-  rgb.red = 255;
-  rgb.blue = 255;
-  rgb.green = 255;
+  std::shared_ptr<core::core_rgb> rgb =
+      std::make_shared<core::core_rgb>(255, 255, 255, 255);
+  // rgb->red = 255;
+  // rgb->blue = 255;
+  // rgb->green = 255;
 
   app->background_color_sdl2(render, rgb);
 
@@ -90,14 +91,14 @@ int main() {
   object::object_rectangle_attributes frame;
   frame.rectangle.w = 75;
   frame.rectangle.h = 75;
-  frame.rectangle.x = screen.width / 2 - frame.rectangle.w / 2;
-  frame.rectangle.y = screen.height / 2 - frame.rectangle.h / 2;
+  frame.rectangle.x = screen->get_width() / 2 - frame.rectangle.w / 2;
+  frame.rectangle.y = screen->get_height() / 2 - frame.rectangle.h / 2;
   frame.speed_x = 5;
   frame.speed_y = 5;
 
   // fps limit
-   const int targetFPS = 60;
-   const int frameDelay = 1000 / targetFPS;
+  const int targetFPS = 60;
+  const int frameDelay = 1000 / targetFPS;
 
   // draw rectangle
 
@@ -127,12 +128,16 @@ int main() {
   // int moveSpeedY = 5;
 
   // main loop
-  while (loop.running) {
+
+  std::shared_ptr<core::core_running> loop =
+      std::make_shared<core::core_running>();
+
+  while (loop->get_running()) {
     Uint32 frameStart = SDL_GetTicks();
     glClear(GL_COLOR_BUFFER_BIT);
-   //SDL_GL_SwapWindow(render.window);
+    // SDL_GL_SwapWindow(render.window);
 
-    if (loop.running == false) {
+    if (!loop->get_running()) {
       std::cerr << "Failed: loop is not running" << '\n';
       app->quit_sdl2(render);
       return -1;
@@ -155,7 +160,7 @@ int main() {
 
     while (SDL_PollEvent(&events.event) != 0) {
       if (event_processor->simple_events(events)) {
-        loop.running = false;
+        loop->set_running(false);
       }
     }
 
@@ -173,18 +178,16 @@ int main() {
     // screen.height) {
     //   frame.speed_y = -frame.speed_y;
     // }
-   // move->auto_move(frame, screen);
+    // move->auto_move(frame, screen);
     move->bellow_move(frame, screen);
-    SDL_SetRenderDrawColor(render.renderer, 0, 255, 0, 255);
+    SDL_SetRenderDrawColor(render.renderer, 75, 0, 75, 255);
     SDL_RenderFillRect(render.renderer, &frame.rectangle);
     SDL_RenderPresent(render.renderer);
 
-   
-
     Uint32 frameTime = SDL_GetTicks() - frameStart;
     if (frameDelay > frameTime) {
-       SDL_Delay(frameDelay - frameTime);
-     }
+      SDL_Delay(frameDelay - frameTime);
+    }
     // frame::auto_move(frame ,1280,720);
 
     // glMatrixMode(GL_PROJECTION);
@@ -222,9 +225,10 @@ int main() {
     // glVertex2f(frame.rectangle.x, frame.rectangle.y + frame.rectangle.h);
     // glEnd();
 
-     SDL_GL_SwapWindow(render.window);
+    SDL_GL_SwapWindow(render.window);
     //  SDL_Delay(16);
     // std::cerr << "loop is running" << '\n';
+
     continue;
   }
 
