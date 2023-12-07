@@ -7,55 +7,14 @@
 #include "../includes/object/object.hpp"
 
 int main() {
-  // int window_width = 1280;
-  // int window_height = 720;
-  // SDL_Window* window{};
-  // SDL_Renderer* renderer{};
-  // if (!core::init_SDL()) {
-  //   return 1;
-  // }
-
-  // if (!core::create_window(window, window_width, window_height)) {
-  //   return 1;
-  // }
-  // renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-
-  // if (renderer == nullptr) {
-  //   std::cerr << "ERROR: Renderer creation failed: " << std::endl;
-  //   core::close(window);
-  //   return 1;
-  // }
-
-  // core::set_backgroud_color(renderer, 255, 255, 255);
-
-  // int frame_width = 200;
-  // int frame_height = 150;
-  // int frame_x = (window_width - frame_width) / 2;
-  // int frame_y = (window_height - frame_height) / 2;
-  // core::render_frame(renderer, frame_x, frame_y, frame_width, frame_height,
-  // 75,
-  //                    25, 150);
-
-  // SDL_RenderPresent(renderer);
-  // SDL_Delay(5000);
-  // core::close(window);
-
-  // struct {
-  //   int width{1280};
-  //   int height{720};
-  // } screen;
-
-  // struct {
-  //   bool running{true};
-  // } loop;
-
+  // renderer instance
   core::core_renderer render;
-  // core::core_screen screen;
 
+  // screen instance
   std::shared_ptr<core::core_screen> screen =
-      std::make_shared<core::core_screen>(1280,720);
+      std::make_shared<core::core_screen>(1280, 720);
 
-  // core::core_sdl2* app = new core::core_sdl2;
+  // sdl instance
   std::shared_ptr<core::core_sdl2> app = std::make_shared<core::core_sdl2>();
 
   if (!app->init_sdl2()) {
@@ -64,10 +23,10 @@ int main() {
     std::cerr << "Menssage: sucess to init SDL2" << '\n';
   }
 
-
   app->create_sdl2_window(render, screen);
   std::cerr << screen->get_width() << std::endl;
 
+  // rgb instance
   std::shared_ptr<core::core_rgb> rgb =
       std::make_shared<core::core_rgb>(255, 255, 255, 255);
   // rgb->red = 255;
@@ -76,59 +35,36 @@ int main() {
 
   app->background_color_sdl2(render, rgb);
 
-  // event::event_sdl2* event_processor = new event::event_sdl2;
-
+  // event instance
   std::shared_ptr<event::event_sdl2> event_processor =
       std::make_shared<event::event_sdl2>();
   event::listener_event events;
 
   // frame instance
-
-  // frame::frame_moviment* move = new frame::frame_moviment;
   std::shared_ptr<object::object_moviment> move =
       std::make_shared<object::object_moviment>();
 
-  object::object_rectangle_attributes frame;
-  frame.rectangle.w = 75;
-  frame.rectangle.h = 75;
-  frame.rectangle.x = screen->get_width() / 2 - frame.rectangle.w / 2;
-  frame.rectangle.y = screen->get_height() / 2 - frame.rectangle.h / 2;
-  frame.speed_x = 5;
-  frame.speed_y = 5;
+  std::shared_ptr<object::object_rectangle_attributes> frame =
+      std::make_shared<object::object_rectangle_attributes>();
+
+  // frame.rectangle.w = 75;
+  // frame.rectangle.h = 75;
+  // frame.rectangle.x = screen->get_width() / 2 - frame.rectangle.w / 2;
+  // frame.rectangle.y = screen->get_height() / 2 - frame.rectangle.h / 2;
+  // frame.speed_x = 5;
+  // frame.speed_y = 5;
+
+  frame->set_width(75); 
+  frame->set_height(75); 
+  frame->set_position_center(screen);
+  frame->set_speed_x(5);
+  frame->set_speed_y(5);
 
   // fps limit
   const int targetFPS = 60;
   const int frameDelay = 1000 / targetFPS;
 
-  // draw rectangle
-
-  // SDL_Rect rectangle{};
-
-  // struct {
-  //   GLfloat x{};
-  //   GLfloat y{};
-  //   int width{};
-  //   int height{};
-  //   int speed_x{};
-  //   int speed_y{};
-  // } draw_rectangle;
-
-  // auto initial_position_x{screen.width / 2 - draw_rectangle.width / 2};
-  // auto inital_position_y{screen.height / 2 - draw_rectangle.height / 2};
-
-  // draw_rectangle.width = 50;
-  // draw_rectangle.height = 50;
-
-  // rectangle.x = initial_position_x;
-  // rectangle.y = inital_position_y;
-  // rectangle.w = draw_rectangle.width;
-  // rectangle.h = draw_rectangle.height;
-
-  // int moveSpeedX = 5;
-  // int moveSpeedY = 5;
-
   // main loop
-
   std::shared_ptr<core::core_running> loop =
       std::make_shared<core::core_running>();
 
@@ -162,6 +98,12 @@ int main() {
       if (event_processor->simple_events(events)) {
         loop->set_running(false);
       }
+      if (events.event.button.button == SDL_BUTTON_LEFT) {
+        if (move->object_clicked(events, frame)) {
+          std::cerr << "acertou o objeto" << '\n';
+          move->random_position_x(frame, screen);
+        }
+      }
     }
 
     // // Move the rectangle automatically
@@ -181,7 +123,7 @@ int main() {
     // move->auto_move(frame, screen);
     move->bellow_move(frame, screen);
     SDL_SetRenderDrawColor(render.renderer, 75, 0, 75, 255);
-    SDL_RenderFillRect(render.renderer, &frame.rectangle);
+    SDL_RenderFillRect(render.renderer, &frame->get_rectangle());
     SDL_RenderPresent(render.renderer);
 
     Uint32 frameTime = SDL_GetTicks() - frameStart;
@@ -228,12 +170,11 @@ int main() {
     SDL_GL_SwapWindow(render.window);
     //  SDL_Delay(16);
     // std::cerr << "loop is running" << '\n';
-
     continue;
   }
 
+  // drop app
   app->quit_sdl2(render);
-  // delete app;
-  //
+
   return 0;
 }
