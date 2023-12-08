@@ -33,7 +33,7 @@ void object_rectangle_attributes::set_height(int height) {
 }
 
 const SDL_Rect& object_rectangle_attributes::get_rectangle() const {
-  return this-> rectangle;
+  return this->rectangle;
 }
 
 int object_rectangle_attributes::get_speed_x() const { return this->speed_x; }
@@ -112,15 +112,15 @@ bool object_moviment::object_clicked(
     std::shared_ptr<object_rectangle_attributes> frame) {
   auto click_on_position_x_inital =
       event.event.button.x >= frame->get_position_x();
- 
+
   auto click_on_position_x_limit =
       event.event.button.x <= frame->get_position_x() + frame->get_width();
 
   auto click_on_position_y_inital =
       event.event.button.y >= frame->get_position_y();
- 
+
   auto click_on_position_y_limit =
-      event.event.button.x <= frame->get_position_y() + frame->get_height();
+      event.event.button.y <= frame->get_position_y() + frame->get_height();
 
   if (click_on_position_x_inital && click_on_position_x_limit &&
       click_on_position_y_inital && click_on_position_y_limit) {
@@ -128,10 +128,6 @@ bool object_moviment::object_clicked(
   }
 
   return false;
-  // return (event.event.button.x >= frame->get_position_x() &&
-  //         event.event.button.x <= frame.rectangle.x + frame.rectangle.w &&
-  //         event.event.button.y >= frame.rectangle.y &&
-  //         event.event.button.y <= frame.rectangle.y + frame.rectangle.h);
 }
 
 }  // namespace object
