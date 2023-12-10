@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <SDL.h>
+#include <SDL_image.h>
 #include <memory.h>
 
 #include <experimental/random>
@@ -17,6 +18,7 @@ namespace object {
 struct object_rectangle_attributes {
  private:
   SDL_Rect rectangle{};
+  SDL_Texture* Texture{};
   int speed_x;
   int speed_y;
 
@@ -25,6 +27,7 @@ struct object_rectangle_attributes {
 
   void set_speed_x(int speed_x);
   void set_speed_y(int speed_y);
+  void set_texture(SDL_Texture* texture);
   void set_positon_x(int positon_x);
   void set_positon_y(int positon_y);
   void set_position_center(std::shared_ptr<core::core_screen> screen);
@@ -32,6 +35,7 @@ struct object_rectangle_attributes {
   void set_height(int height);
 
   const SDL_Rect& get_rectangle() const;
+  SDL_Texture* get_texture() const;
   int get_speed_x() const;
   int get_speed_y() const;
   int get_position_x() const;
