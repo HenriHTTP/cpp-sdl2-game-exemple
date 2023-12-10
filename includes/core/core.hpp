@@ -58,6 +58,7 @@ struct core_screen {
   void set_resolution(int w, int h);
   void set_width(int w);
   void set_height(int h);
+  
   int get_width() const;
   int get_height() const;
 };
