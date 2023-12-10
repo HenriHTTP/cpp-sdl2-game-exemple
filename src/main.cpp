@@ -1,5 +1,8 @@
 #include "../includes/game.hpp"
 
+SDL_Texture* loadTexture(const std::string& filePath,
+                         core::core_renderer& render);
+
 int main() {
   // renderer instance
   core::core_renderer render;
@@ -26,25 +29,53 @@ int main() {
 
   app->background_color_sdl2(render, rgb);
 
+  /*
+this is a test for implementing textures in the future as this has no class or
+structure implemented
+*/
+
+  // texturs instance
+  SDL_Texture* texture = loadTexture("../assets/textures/cube.png", render);
+
+  if (!texture) {
+    std::cerr << "Failed: Texture is not found" << '\n';
+    return -1;
+  }
+
   // event instance
   std::shared_ptr<event::event_sdl2> event_processor =
       std::make_shared<event::event_sdl2>();
 
   event::listener_event events;
 
-  // frame instance
+  // object instance
   std::shared_ptr<object::object_moviment> object =
       std::make_shared<object::object_moviment>();
 
-  std::shared_ptr<object::object_rectangle_attributes> frame =
-      std::make_shared<object::object_rectangle_attributes>();
+  // frame instance
 
-  frame->set_width(75);
-  frame->set_height(75);
-  frame->set_position_center(screen);
-  frame->set_speed_x(5);
-  frame->set_speed_y(5);
+  // std::shared_ptr<object::object_rectangle_attributes> frame =
+  //     std::make_shared<object::object_rectangle_attributes>();
 
+  // frame->set_width(75);
+  // frame->set_height(75);
+  // frame->set_position_center(screen);
+  // frame->set_speed_x(5);
+  // frame->set_speed_y(5);
+
+  // frame instance with vector smart_ptr
+  std::vector<std::shared_ptr<object::object_rectangle_attributes>> vect_frames(
+      5);
+
+  for (size_t i{0}; i < vect_frames.size(); ++i) {
+    vect_frames[i] = std::make_shared<object::object_rectangle_attributes>();
+    vect_frames[i]->set_width(75);
+    vect_frames[i]->set_height(75);
+    vect_frames[i]->set_position_center(screen);
+    vect_frames[i]->set_speed_x(5);
+    vect_frames[i]->set_speed_y(5);
+    vect_frames[i]->set_texture(texture);
+  }
   // fps limit
   const int targetFPS = 60;
   const int frameDelay = 1000 / targetFPS;
@@ -67,24 +98,33 @@ int main() {
       if (event_processor->simple_events(events)) {
         loop->set_running(false);
       }
+
       if (events.event.button.button == SDL_BUTTON_LEFT) {
-        if (object->object_clicked(events, frame)) {
-          std::cerr << "acertou o objeto" << '\n';
-          object->random_position_x(frame, screen);
+        // const auto is a name for reference a individual item inside vector
+        for (const auto& frame : vect_frames) {
+          if (object->object_clicked(events, frame)) {
+            std::cerr << "acertou o objeto" << '\n';
+            frame->set_positon_y(0);
+            object->random_position_x(frame, screen);
+          }
         }
       }
     }
 
-    object->bellow_move(frame, screen);
-    SDL_SetRenderDrawColor(render.renderer, 75, 0, 75, 255);
-    SDL_RenderFillRect(render.renderer, &frame->get_rectangle());
+    for (const auto& frame : vect_frames) {
+      object->bellow_move(frame, screen);
+      SDL_Rect destRect = frame->get_rectangle();
+      // SDL_SetRenderDrawColor(render.renderer, 0, 0, 255, 255);
+      // SDL_RenderFillRect(render.renderer, &frame->get_rectangle());
+      SDL_RenderCopy(render.renderer, frame->get_texture(), NULL, &destRect);
+    }
+
     SDL_RenderPresent(render.renderer);
 
     Uint32 frameTime = SDL_GetTicks() - frameStart;
     if (frameDelay > frameTime) {
       SDL_Delay(frameDelay - frameTime);
     }
-
 
     // glMatrixMode(GL_PROJECTION);
     // glLoadIdentity();
@@ -130,4 +170,25 @@ int main() {
   app->quit_sdl2(render);
 
   return 0;
+}
+
+SDL_Texture* loadTexture(const std::string& filePath,
+                         core::core_renderer& render) {
+  // Carrega a imagem usando SDL_image
+  SDL_Surface* surface = IMG_Load(filePath.c_str());
+  if (!surface) {
+    std::cerr << "Failed to load image: " << IMG_GetError() << '\n';
+    return nullptr;
+  }
+
+  // Cria uma textura a partir da superfície
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(render.renderer, surface);
+  if (!texture) {
+    std::cerr << "Failed to create texture: " << SDL_GetError() << '\n';
+  }
+
+  // Libera a superfície, pois a textura já foi criada
+  SDL_FreeSurface(surface);
+
+  return texture;
 }
