@@ -10,6 +10,10 @@ void object_rectangle_attributes::set_speed_y(int speed_y) {
   this->speed_y = speed_y;
 }
 
+void object_rectangle_attributes::set_texture(SDL_Texture* texture) {
+  this->Texture = texture;
+}
+
 void object_rectangle_attributes::set_positon_x(int positon_x) {
   this->rectangle.x = positon_x;
 }
@@ -34,6 +38,10 @@ void object_rectangle_attributes::set_height(int height) {
 
 const SDL_Rect& object_rectangle_attributes::get_rectangle() const {
   return this->rectangle;
+}
+
+SDL_Texture* object_rectangle_attributes::get_texture() const {
+  return this->Texture;
 }
 
 int object_rectangle_attributes::get_speed_x() const { return this->speed_x; }
