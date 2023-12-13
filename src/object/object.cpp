@@ -2,23 +2,37 @@
 
 namespace object {
 
-void object_rectangle_attributes::set_speed_x(int speed_x) {
+void object_rectangle_attributes::set_speed_x(const int& speed_x) {
   this->speed_x = speed_x;
 }
 
-void object_rectangle_attributes::set_speed_y(int speed_y) {
+void object_rectangle_attributes::set_speed_y(const int& speed_y) {
   this->speed_y = speed_y;
 }
 
-void object_rectangle_attributes::set_texture(SDL_Texture* texture) {
-  this->Texture = texture;
+bool object_rectangle_attributes::set_texture(const std::string& file_path,
+                                              core::core_renderer& render) {
+  SDL_Surface* surface = IMG_Load(file_path.c_str());
+
+  if (!surface) {
+    std::cerr << "Failed to load image: " << '\n';
+    return false;
+  }
+
+  this->Texture = SDL_CreateTextureFromSurface(render.renderer, surface);
+  if (Texture == nullptr) {
+    std::cerr << "Failed to create texture: " << '\n';
+    return false;
+  }
+  SDL_FreeSurface(surface);
+  return true;
 }
 
-void object_rectangle_attributes::set_positon_x(int positon_x) {
+void object_rectangle_attributes::set_positon_x(const int& positon_x) {
   this->rectangle.x = positon_x;
 }
 
-void object_rectangle_attributes::set_positon_y(int positon_y) {
+void object_rectangle_attributes::set_positon_y(const int& positon_y) {
   this->rectangle.y = positon_y;
 }
 
@@ -28,11 +42,11 @@ void object_rectangle_attributes::set_position_center(
   this->rectangle.y = screen->get_height() / 2 - rectangle.h / 2;
 }
 
-void object_rectangle_attributes::set_width(int width) {
+void object_rectangle_attributes::set_width(const int& width) {
   this->rectangle.w = width;
 }
 
-void object_rectangle_attributes::set_height(int height) {
+void object_rectangle_attributes::set_height(const int& height) {
   this->rectangle.h = height;
 }
 
