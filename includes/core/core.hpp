@@ -53,11 +53,11 @@ struct core_screen {
 
  public:
   core_screen() = default;
-  core_screen(int w, int h) : width(w), height(h) {}
+  core_screen(const int& w, const int& h) : width(w), height(h) {}
 
-  void set_resolution(int w, int h);
-  void set_width(int w);
-  void set_height(int h);
+  void set_resolution(const int& w, const int& h);
+  void set_width(const int& w);
+  void set_height(const int& h);
   
   int get_width() const;
   int get_height() const;
