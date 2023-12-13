@@ -17,13 +17,13 @@ Uint8 core_rgb::get_alpha() const { return this->alpha; }
 void core_running::set_running(bool new_state) { this->running = new_state; }
 bool core_running::get_running() const { return this->running; }
 
-void core_screen::set_resolution(int w, int h) {
+void core_screen::set_resolution(const int& w, const int& h) {
   this->width = w;
   this->height = h;
 }
 
-void core_screen::set_width(int w) { this->width = w; }
-void core_screen::set_height(int h) { this->height = h; }
+void core_screen::set_width(const int& w) { this->width = w; }
+void core_screen::set_height(const int& h) { this->height = h; }
 
 int core_screen::get_width() const { return this->width; }
 int core_screen::get_height() const { return this->height; }
