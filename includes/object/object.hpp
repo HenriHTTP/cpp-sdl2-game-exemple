@@ -25,14 +25,14 @@ struct object_rectangle_attributes {
  public:
   object_rectangle_attributes() = default;
 
-  void set_speed_x(int speed_x);
-  void set_speed_y(int speed_y);
-  void set_texture(SDL_Texture* texture);
-  void set_positon_x(int positon_x);
-  void set_positon_y(int positon_y);
+  void set_speed_x(const int& speed_x);
+  void set_speed_y(const int& speed_y);
+  bool set_texture(const std::string& file_path, core::core_renderer& render);
+  void set_positon_x(const int& positon_x);
+  void set_positon_y(const int& positon_y);
   void set_position_center(std::shared_ptr<core::core_screen> screen);
-  void set_width(int widht);
-  void set_height(int height);
+  void set_width(const int& widht);
+  void set_height(const int& height);
 
   const SDL_Rect& get_rectangle() const;
   SDL_Texture* get_texture() const;
