@@ -77,34 +77,82 @@ void object_rectangle_attributes::auto_move_x() {
   this->rectangle.x += speed_x;
 }
 
+void object_rectangle_attributes::auto_move_x_negative() {
+  this->rectangle.x -= speed_x;
+}
+
 void object_rectangle_attributes::auto_move_y() {
   this->rectangle.y += speed_y;
 }
 
+void object_rectangle_attributes::auto_move_jump() {
+  this->rectangle.y -= speed_y;
+}
+void object_rectangle_attributes::auto_fall() { this->rectangle.y += speed_y; }
 void object_rectangle_attributes::auto_move() {
   this->auto_move_x();
   this->auto_move_y();
 }
 
+bool object_rectangle_attributes::colision_x(
+    std::shared_ptr<object_rectangle_attributes>& other) {
+  bool is_colision_x =
+      (this->get_position_x() + this->get_width() >= other->get_position_x()) &&
+      (this->get_position_x() <=
+       other->get_position_x() + other->get_width()) &&
+      (this->get_position_y() <=
+       other->get_position_y() + other->get_height()) &&
+      (this->get_position_y() + this->get_height() >= other->get_position_y());
+  if (is_colision_x) {
+    std::cerr << "Menssage: colision between obj in x" << '\n';
+    this->speed_x = -speed_x;
+    return true;
+  }
+
+  return false;
+}
+
+bool object_rectangle_attributes::colision_y(
+    std::shared_ptr<object_rectangle_attributes>& other) {
+  bool is_colision_y =
+      (this->get_position_y() <=
+       other->get_position_y() + other->get_height()) &&
+      (this->get_position_y() + this->get_height() > other->get_position_y()) &&
+      (this->get_position_x() + this->get_width() >= other->get_position_x()) &&
+      (this->get_position_x() <= other->get_position_x() + other->get_width());
+
+  if (is_colision_y) {
+    std::cerr << "Menssage: colision between obj in y" << '\n';
+    this->speed_y = -speed_y;
+    return true;
+  }
+
+  return false;
+}
+
+void object_rectangle_attributes::auto_gravity() {
+  this->rectangle.y += speed_y;
+}
+
 void object_moviment::auto_move(
-    std::shared_ptr<object_rectangle_attributes> frame,
-    std::shared_ptr<core::core_screen> screen) {
+    std::shared_ptr<object_rectangle_attributes>& frame,
+    std::shared_ptr<core::core_screen>& screen) {
   frame->auto_move();
 
   if (frame->get_position_x() < 0 ||
       frame->get_position_x() + frame->get_width() > screen->get_width()) {
-    frame->set_positon_x(-frame->get_speed_x());
+    frame->set_speed_x(-frame->get_speed_x());
   }
 
   if (frame->get_position_y() < 0 ||
       frame->get_position_y() + frame->get_height() > screen->get_height()) {
-    frame->set_positon_y(-frame->get_speed_y());
+    frame->set_speed_y(-frame->get_speed_y());
   }
 }
 
 void object_moviment::random_position_x(
-    std::shared_ptr<object_rectangle_attributes> frame,
-    std::shared_ptr<core::core_screen> screen) {
+    std::shared_ptr<object_rectangle_attributes>& frame,
+    std::shared_ptr<core::core_screen>& screen) {
   int n_position = std::experimental::randint(
       10, (screen->get_width() - frame->get_position_x()));
   frame->set_positon_x(n_position);
@@ -112,12 +160,13 @@ void object_moviment::random_position_x(
 }
 
 void object_moviment::bellow_move(
-    std::shared_ptr<object_rectangle_attributes> frame,
-    std::shared_ptr<core::core_screen> screen) {
+    std::shared_ptr<object_rectangle_attributes>& frame,
+    std::shared_ptr<core::core_screen>& screen) {
   static int object_leaks{};
 
   std::cerr << "Message: Positon x :" << frame->get_position_x() << '\n';
   frame->auto_move_y();
+  void colision_frames();
 
   if (frame->get_position_y() > screen->get_height() ||
       frame->get_position_y() == screen->get_height() - frame->get_height()) {
@@ -131,7 +180,7 @@ void object_moviment::bellow_move(
 
 bool object_moviment::object_clicked(
     event::listener_event& event,
-    std::shared_ptr<object_rectangle_attributes> frame) {
+    std::shared_ptr<object_rectangle_attributes>& frame) {
   auto click_on_position_x_inital =
       event.event.button.x >= frame->get_position_x();
 
