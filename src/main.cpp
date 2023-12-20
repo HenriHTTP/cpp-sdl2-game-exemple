@@ -5,19 +5,13 @@ int main() {
   core::core_renderer render;
 
   // screen instance
-  auto screen = std::make_shared<core::core_screen>(1280, 720);
+  auto screen = std::make_shared<core::core_screen>(600, 800);
 
   // sdl instance
   auto app = std::make_shared<core::core_sdl2>();
 
-  if (!app->init_sdl2()) {
-    return -1;
-  } else {
-    std::cerr << "Menssage: sucess to init SDL2" << '\n';
-  }
-
+  app->init_sdl2();
   app->create_sdl2_window(render, screen);
-  std::cerr << screen->get_width() << std::endl;
 
   // rgb instance
   auto rgb = std::make_shared<core::core_rgb>(255, 0, 127, 255);
@@ -32,19 +26,25 @@ int main() {
   // object instance
   auto object = std::make_shared<object::object_moviment>();
 
-  // frames instance vector
-  auto vect_frames =
-      std::vector<std::shared_ptr<object::object_rectangle_attributes>>(5);
+  // player instance
+  auto player_shape = std::make_shared<object::object_rectangle_attributes>();
+  player_shape->set_width(30);
+  player_shape->set_height(30);
+  player_shape->set_position_center(screen);
+  player_shape->set_speed_x(5);
+  player_shape->set_speed_y(5);
+  player_shape->set_texture("../assets/textures/cube.png", render);
 
-  for (auto& frame : vect_frames) {
-    frame = std::make_shared<object::object_rectangle_attributes>();
-    frame->set_width(200);
-    frame->set_height(200);
-    frame->set_position_center(screen);
-    frame->set_speed_x(5);
-    frame->set_speed_y(5);
-    frame->set_texture("../assets/textures/cube.png", render);
-  }
+  auto plataform = std::make_shared<object::object_rectangle_attributes>();
+  plataform->set_width(300);
+  plataform->set_height(30);
+  plataform->set_position_center(screen);
+  auto end_y = screen->get_height() - plataform->get_height();
+  plataform->set_positon_y(end_y);
+  plataform->set_speed_x(5);
+  plataform->set_speed_y(5);
+  plataform->set_texture("../assets/textures/cube.png", render);
+
   // fps limit
   const int targetFPS = 60;
   const int frameDelay = 1000 / targetFPS;
@@ -62,29 +62,28 @@ int main() {
       return -1;
     }
 
+    SDL_RenderCopy(render.renderer, player_shape->get_texture(), NULL,
+                   &player_shape->get_rectangle());
+    SDL_RenderCopy(render.renderer, plataform->get_texture(), NULL,
+                   &plataform->get_rectangle());
+ 
+
+    object->auto_move(player_shape, screen);
+    player_shape->colision_x(plataform);
+    player_shape->colision_y(plataform);
+
     while (SDL_PollEvent(&events.event) != 0) {
       if (event_processor->simple_events(events)) {
         loop->set_running(false);
       }
-
-      if (events.event.button.button == SDL_BUTTON_LEFT) {
-        // const auto is a name for reference a individual item inside vector
-        for (const auto& frame : vect_frames) {
-          if (object->object_clicked(events, frame)) {
-            std::cerr << "acertou o objeto" << '\n';
-            frame->set_positon_y(0);
-            object->random_position_x(frame, screen);
-          }
+      if (events.event.type == SDL_KEYDOWN) {
+        if (events.event.key.keysym.sym == SDLK_d) {
+          plataform->auto_move_x();
+        }
+        if (events.event.key.keysym.sym == SDLK_a) {
+          plataform->auto_move_x_negative();
         }
       }
-    }
-
-    for (const auto& frame : vect_frames) {
-      object->bellow_move(frame, screen);
-      SDL_Rect retangle_shape = frame->get_rectangle();
-      SDL_RenderCopy(render.renderer, frame->get_texture(), NULL,
-                     &retangle_shape);
-    }
 
     SDL_RenderPresent(render.renderer);
 
@@ -94,8 +93,8 @@ int main() {
       SDL_Delay(frameDelay - frameTime);
     }
 
+
     SDL_GL_SwapWindow(render.window);
-    // std::cerr << "loop is running" << '\n';
     continue;
   }
 
