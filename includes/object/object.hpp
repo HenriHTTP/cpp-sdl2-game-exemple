@@ -44,37 +44,30 @@ struct object_rectangle_attributes {
   int get_height() const;
 
   void auto_move_x();
+  void auto_move_x_negative();
   void auto_move_y();
+  void auto_move_y_negative();
+  void auto_move_jump();
+  void auto_fall();
   void auto_move();
+  void auto_gravity();
+  bool colision_x(std::shared_ptr<object_rectangle_attributes>& other);
+  bool colision_y(std::shared_ptr<object_rectangle_attributes>& other);
 };
 
-class object_moviment_interfaces {
+class object_moviment {
  public:
-  virtual ~object_moviment_interfaces() = default;
-  virtual void auto_move(std::shared_ptr<object_rectangle_attributes> frame,
-                         std::shared_ptr<core::core_screen> screen) = 0;
-  virtual void bellow_move(std::shared_ptr<object_rectangle_attributes> frame,
-                           std::shared_ptr<core::core_screen> screen) = 0;
-  virtual void random_position_x(
-      std::shared_ptr<object_rectangle_attributes> frame,
-      std::shared_ptr<core::core_screen> screen) = 0;
-  virtual bool object_clicked(
-      event::listener_event& event,
-      std::shared_ptr<object_rectangle_attributes> frame) = 0;
-};
+  object_moviment() = default;
 
-class object_moviment : public object_moviment_interfaces {
- public:
-  void auto_move(std::shared_ptr<object_rectangle_attributes> frame,
-                 std::shared_ptr<core::core_screen> screen) override;
-  void bellow_move(std::shared_ptr<object_rectangle_attributes> frame,
-                   std::shared_ptr<core::core_screen> screen) override;
-  void random_position_x(std::shared_ptr<object_rectangle_attributes> frame,
-                         std::shared_ptr<core::core_screen> screen) override;
+  void auto_move(std::shared_ptr<object_rectangle_attributes>& frame,
+                 std::shared_ptr<core::core_screen>& screen);
+  void bellow_move(std::shared_ptr<object_rectangle_attributes>& frame,
+                   std::shared_ptr<core::core_screen>& screen);
+  void random_position_x(std::shared_ptr<object_rectangle_attributes>& frame,
+                         std::shared_ptr<core::core_screen>& screen);
 
-  bool object_clicked(
-      event::listener_event& event,
-      std::shared_ptr<object_rectangle_attributes> frame) override;
+  bool object_clicked(event::listener_event& event,
+                      std::shared_ptr<object_rectangle_attributes>& frame);
 };
 };  // namespace object
 
