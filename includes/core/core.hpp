@@ -58,30 +58,21 @@ struct core_screen {
   void set_resolution(const int& w, const int& h);
   void set_width(const int& w);
   void set_height(const int& h);
-  
+
   int get_width() const;
   int get_height() const;
 };
 
-class core_interfaces {
+class core_sdl2 {
  public:
-  virtual ~core_interfaces() = default;
-  virtual bool init_sdl2() = 0;
-  virtual bool create_sdl2_window(core_renderer& renderer,
-                                  std::shared_ptr<core_screen>screen) = 0;
-  virtual void background_color_sdl2(core_renderer& renderer,
-                                     std::shared_ptr<core_rgb> rgb) = 0;
-  virtual void quit_sdl2(core_renderer& renderer) = 0;
-};
+  core_sdl2() = default;
 
-class core_sdl2 : public core_interfaces {
- public:
-  bool init_sdl2() override;
-  void quit_sdl2(core_renderer& renderer) override;
+  bool init_sdl2();
+  void quit_sdl2(core_renderer& renderer);
   bool create_sdl2_window(core_renderer& renderer,
-                          std::shared_ptr<core_screen> screen) override;
+                          std::shared_ptr<core_screen> screen);
   void background_color_sdl2(core_renderer& renderer,
-                             std::shared_ptr<core_rgb> rgb) override;
+                             std::shared_ptr<core_rgb> rgb);
 };
 
 }  // namespace core
