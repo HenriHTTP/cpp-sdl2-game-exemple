@@ -20,6 +20,7 @@ bool object_rectangle_attributes::set_texture(const std::string& file_path,
   }
 
   this->Texture = SDL_CreateTextureFromSurface(render.renderer, surface);
+
   if (Texture == nullptr) {
     std::cerr << "Failed to create texture: " << '\n';
     return false;
