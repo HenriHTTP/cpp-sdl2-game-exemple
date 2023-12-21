@@ -1,6 +1,6 @@
 # About Project
 
-This project isa game exemple made in SDL2 and GLEW.This project using interfaces for implement class also use structs. 
+This project is a game exemple made in SDL2 and GLEW.This project using interfaces for implement class also use structs. 
 
 # Dependencies Project
 
