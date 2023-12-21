@@ -14,7 +14,7 @@ int main() {
   app->create_sdl2_window(render, screen);
 
   // rgb instance
-  auto rgb = std::make_shared<core::core_rgb>(255, 0, 127, 255);
+  auto rgb = std::make_shared<core::core_rgb>(0, 0, 0, 255);
 
   app->background_color_sdl2(render, rgb);
 
@@ -27,23 +27,30 @@ int main() {
   auto object = std::make_shared<object::object_moviment>();
 
   // player instance
-  auto player_shape = std::make_shared<object::object_rectangle_attributes>();
-  player_shape->set_width(30);
-  player_shape->set_height(30);
-  player_shape->set_position_center(screen);
-  player_shape->set_speed_x(5);
-  player_shape->set_speed_y(5);
-  player_shape->set_texture("../assets/textures/cube.png", render);
+  auto object_colision =
+      std::make_shared<object::object_rectangle_attributes>();
+  object_colision->set_width(30);
+  object_colision->set_height(30);
+  object_colision->set_position_center(screen);
+  object_colision->set_speed_x(5);
+  object_colision->set_speed_y(5);
 
-  auto plataform = std::make_shared<object::object_rectangle_attributes>();
-  plataform->set_width(300);
-  plataform->set_height(30);
-  plataform->set_position_center(screen);
-  auto end_y = screen->get_height() - plataform->get_height();
-  plataform->set_positon_y(end_y);
-  plataform->set_speed_x(5);
-  plataform->set_speed_y(5);
-  plataform->set_texture("../assets/textures/cube.png", render);
+  auto player = std::make_shared<object::object_rectangle_attributes>();
+  player->set_width(250);
+  player->set_height(30);
+  player->set_position_center(screen);
+  auto end_y = screen->get_height() - player->get_height();
+  player->set_positon_y(end_y);
+  player->set_speed_x(5);
+  player->set_speed_y(5);
+
+  auto opponent = std::make_shared<object::object_rectangle_attributes>();
+  opponent->set_width(250);
+  opponent->set_height(30);
+  opponent->set_position_center(screen);
+  opponent->set_positon_y(0);
+  opponent->set_speed_x(5);
+  opponent->set_speed_y(5);
 
   // fps limit
   const int targetFPS = 60;
@@ -62,15 +69,20 @@ int main() {
       return -1;
     }
 
-    SDL_RenderCopy(render.renderer, player_shape->get_texture(), NULL,
-                   &player_shape->get_rectangle());
-    SDL_RenderCopy(render.renderer, plataform->get_texture(), NULL,
-                   &plataform->get_rectangle());
- 
+    SDL_SetRenderDrawColor(render.renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(render.renderer, &player->get_rectangle());
 
-    object->auto_move(player_shape, screen);
-    player_shape->colision_x(plataform);
-    player_shape->colision_y(plataform);
+    SDL_SetRenderDrawColor(render.renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(render.renderer, &opponent->get_rectangle());
+
+    SDL_SetRenderDrawColor(render.renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(render.renderer, &object_colision->get_rectangle());
+
+    object->auto_move(object_colision, screen);
+    object_colision->colision_x(player);
+    object_colision->colision_y(player);
+    object_colision->colision_x(opponent);
+    object_colision->colision_y(opponent);
 
     while (SDL_PollEvent(&events.event) != 0) {
       if (event_processor->simple_events(events)) {
@@ -78,12 +90,24 @@ int main() {
       }
       if (events.event.type == SDL_KEYDOWN) {
         if (events.event.key.keysym.sym == SDLK_d) {
-          plataform->auto_move_x();
+          player->set_speed_x(20);
+          player->auto_move_x();
         }
         if (events.event.key.keysym.sym == SDLK_a) {
-          plataform->auto_move_x_negative();
+          player->set_speed_x(20);
+          player->auto_move_x_negative();
+        }
+
+        if (events.event.key.keysym.sym == SDLK_RIGHT) {
+          opponent->set_speed_x(20);
+          opponent->auto_move_x();
+        }
+        if (events.event.key.keysym.sym == SDLK_LEFT) {
+          opponent->set_speed_x(20);
+          opponent->auto_move_x_negative();
         }
       }
+    }
 
     SDL_RenderPresent(render.renderer);
 
@@ -92,7 +116,6 @@ int main() {
     if (frameDelay > frameTime) {
       SDL_Delay(frameDelay - frameTime);
     }
-
 
     SDL_GL_SwapWindow(render.window);
     continue;
