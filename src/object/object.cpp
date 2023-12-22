@@ -6,8 +6,17 @@ void object_rectangle_attributes::set_speed_x(const int& speed_x) {
   this->speed_x = speed_x;
 }
 
+void object_rectangle_attributes::set_negative_speed_x() {
+  this->speed_x = -this->get_speed_x();
+  ;
+}
+
 void object_rectangle_attributes::set_speed_y(const int& speed_y) {
   this->speed_y = speed_y;
+}
+
+void object_rectangle_attributes::set_negative_speed_y() {
+  this->speed_y = -this->get_speed_y();
 }
 
 bool object_rectangle_attributes::set_texture(const std::string& file_path,
@@ -106,7 +115,6 @@ bool object_rectangle_attributes::colision_x(
       (this->get_position_y() + this->get_height() >= other->get_position_y());
   if (is_colision_x) {
     std::cerr << "Menssage: colision between obj in x" << '\n';
-    this->speed_x = -speed_x;
     return true;
   }
 
@@ -124,7 +132,6 @@ bool object_rectangle_attributes::colision_y(
 
   if (is_colision_y) {
     std::cerr << "Menssage: colision between obj in y" << '\n';
-    this->speed_y = -speed_y;
     return true;
   }
 
