@@ -78,11 +78,18 @@ int main() {
     SDL_SetRenderDrawColor(render.renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(render.renderer, &object_colision->get_rectangle());
 
+    SDL_RenderDrawLine(render.renderer, 0, screen->get_height() / 2,
+                       screen->get_height(), screen->get_height() / 2);
+
     object->auto_move(object_colision, screen);
-    object_colision->colision_x(player);
-    object_colision->colision_y(player);
-    object_colision->colision_x(opponent);
-    object_colision->colision_y(opponent);
+    if (object_colision->colision_x(player) ||
+        object_colision->colision_x(opponent)) {
+      object_colision->set_negative_speed_x();
+    }
+    if (object_colision->colision_y(player) ||
+        object_colision->colision_y(opponent)) {
+      object_colision->set_negative_speed_y();
+    }
 
     while (SDL_PollEvent(&events.event) != 0) {
       if (event_processor->simple_events(events)) {
