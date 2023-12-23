@@ -26,6 +26,8 @@ struct object_rectangle_attributes {
   object_rectangle_attributes() = default;
 
   void set_speed_x(const int& speed_x);
+  void set_negative_speed_x();
+  void set_negative_speed_y();
   void set_speed_y(const int& speed_y);
   bool set_texture(const std::string& file_path, core::core_renderer& render);
   void set_positon_x(const int& positon_x);
