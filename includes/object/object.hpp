@@ -6,7 +6,7 @@
 #include <SDL_image.h>
 #include <memory.h>
 
-#include <experimental/random>
+// #include <experimental/random>
 #include <iostream>
 #include <memory>
 
@@ -65,8 +65,6 @@ class object_moviment {
                  std::shared_ptr<core::core_screen>& screen);
   void bellow_move(std::shared_ptr<object_rectangle_attributes>& frame,
                    std::shared_ptr<core::core_screen>& screen);
-  void random_position_x(std::shared_ptr<object_rectangle_attributes>& frame,
-                         std::shared_ptr<core::core_screen>& screen);
 
   bool object_clicked(event::listener_event& event,
                       std::shared_ptr<object_rectangle_attributes>& frame);

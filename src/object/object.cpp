@@ -8,7 +8,6 @@ void object_rectangle_attributes::set_speed_x(const int& speed_x) {
 
 void object_rectangle_attributes::set_negative_speed_x() {
   this->speed_x = -this->get_speed_x();
-  ;
 }
 
 void object_rectangle_attributes::set_speed_y(const int& speed_y) {
@@ -158,14 +157,6 @@ void object_moviment::auto_move(
   }
 }
 
-void object_moviment::random_position_x(
-    std::shared_ptr<object_rectangle_attributes>& frame,
-    std::shared_ptr<core::core_screen>& screen) {
-  int n_position = std::experimental::randint(
-      10, (screen->get_width() - frame->get_position_x()));
-  frame->set_positon_x(n_position);
-  std::cerr << "Message: x  position : " << n_position << '\n';
-}
 
 void object_moviment::bellow_move(
     std::shared_ptr<object_rectangle_attributes>& frame,
@@ -182,7 +173,6 @@ void object_moviment::bellow_move(
     std::cerr << "Failed: messsage object overflow" << '\n';
     std::cerr << "Failed: message object leak windown " << object_leaks << '\n';
     frame->set_positon_y(0);
-    this->random_position_x(frame, screen);
   }
 }
 
