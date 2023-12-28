@@ -25,7 +25,9 @@ target_link_libraries(Game PRIVATE GLEW::GLEW)
 target_link_libraries(Game PRIVATE ${SDL2_TTF_LIBRARIES})  # Vincule com a biblioteca SDL2_ttf
 
 # Definir as flags de compilação
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Verificar o compilador do sistema
 if(ANDROID)
