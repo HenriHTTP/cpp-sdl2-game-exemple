@@ -39,11 +39,19 @@ bool core_sdl2::init_sdl2() {
   return true;
 }
 
+bool core_sdl2::init_sdl2_ttf() {
+  if (TTF_Init() == -1) {
+    std::cerr << "Failed: SDL_ttf could not initialize! SDL_ttf Error " << '\n';
+    return false;
+  }
+  return true;
+}
+
 bool core_sdl2::create_sdl2_window(core_renderer& renderer,
                                    std::shared_ptr<core_screen> screen) {
-  renderer.window = SDL_CreateWindow("SDL Window", SDL_WINDOWPOS_UNDEFINED,
-                                     SDL_WINDOWPOS_UNDEFINED, screen->get_width(),
-                                     screen->get_height(), SDL_WINDOW_SHOWN);
+  renderer.window = SDL_CreateWindow(
+      "SDL Window", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+      screen->get_width(), screen->get_height(), SDL_WINDOW_SHOWN);
 
   if (renderer.window == nullptr) {
     std::cerr << "Failed: error on create SDL2 window" << '\n';
