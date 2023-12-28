@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <memory.h>
 
 #include <iostream>
@@ -68,6 +69,7 @@ class core_sdl2 {
   core_sdl2() = default;
 
   bool init_sdl2();
+  bool init_sdl2_ttf();
   void quit_sdl2(core_renderer& renderer);
   bool create_sdl2_window(core_renderer& renderer,
                           std::shared_ptr<core_screen> screen);
