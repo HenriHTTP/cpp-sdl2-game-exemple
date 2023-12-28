@@ -5,12 +5,13 @@ int main() {
   core::core_renderer render;
 
   // screen instance
-  auto screen = std::make_shared<core::core_screen>(600, 800);
+  auto screen = std::make_shared<core::core_screen>(400, 800);
 
   // sdl instance
   auto app = std::make_shared<core::core_sdl2>();
 
   app->init_sdl2();
+  app->init_sdl2_ttf();
   app->create_sdl2_window(render, screen);
 
   // rgb instance
@@ -56,6 +57,14 @@ int main() {
   const int targetFPS = 60;
   const int frameDelay = 1000 / targetFPS;
 
+  // font instance
+  auto font_asset =
+      std::make_shared<asset::font>("../assets/fonts/font.ttf", 30);
+  font_asset->set_ttf_font();
+  SDL_Color font_color{255, 255, 255, 255};
+  font_asset->set_text_surface("score", font_color);
+  font_asset->set_texture(render.renderer);
+
   // main loop
   auto loop = std::make_shared<core::core_running>();
 
@@ -80,6 +89,12 @@ int main() {
 
     SDL_RenderDrawLine(render.renderer, 0, screen->get_height() / 2,
                        screen->get_height(), screen->get_height() / 2);
+
+    SDL_Rect scoreRect = {0, 400, 0, 0};  // Posição do texto na tela
+    SDL_QueryTexture(font_asset->get_texture(), nullptr, nullptr, &scoreRect.w,
+                     &scoreRect.h);
+    SDL_RenderCopy(render.renderer, font_asset->get_texture(), nullptr,
+                   &scoreRect);
 
     object->auto_move(object_colision, screen);
     if (object_colision->colision_x(player) ||
