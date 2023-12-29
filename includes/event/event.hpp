@@ -6,19 +6,22 @@
 
 #include <iostream>
 
-namespace event {
+namespace event
+{
 
-struct listener_event {
-  SDL_Event event;
+struct listener_event
+{
+    SDL_Event event;
 };
 
-class event_sdl2 {
- public:
-  event_sdl2() = default;
+class event_sdl2
+{
+  public:
+    event_sdl2() = default;
 
-  bool simple_events(listener_event& events);
+    bool simple_events(listener_event &events);
 };
 
-}  // namespace event
+} // namespace event
 
 #endif
