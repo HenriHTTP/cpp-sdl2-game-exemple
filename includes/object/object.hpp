@@ -6,7 +6,6 @@
 #include <SDL_image.h>
 #include <memory.h>
 
-// #include <experimental/random>
 #include <iostream>
 #include <memory>
 
@@ -16,16 +15,42 @@
 namespace object
 {
 
-struct object_rectangle_attributes
+/**
+ * @class object_rectangle_attributes
+ * @brief this class representing a primitive rectangle object.
+ *
+ * @details Manages the attributes of a primitive rectangle object, including
+ * position, velocity, dimension, and texture.
+ */
+
+class object_rectangle_attributes
 {
   private:
+    /**
+     * @brief Class attributes
+     *
+     * @details The class attributes using primitive types int and SDL structure rectangle,texture.
+     */
+
     SDL_Rect rectangle{};
     SDL_Texture *Texture{};
     int speed_x;
     int speed_y;
 
   public:
+    /**
+     * @brief Default construtor class object_moviment
+     *
+     * @details the all params contructor is NULL
+     */
+
     object_rectangle_attributes() = default;
+
+    /**
+     * @brief configuiration methods (set)
+     *
+     * @details this section contains set methods prototypes
+     */
 
     void set_speed_x(const int &speed_x);
     void set_negative_speed_x();
@@ -34,9 +59,15 @@ struct object_rectangle_attributes
     bool set_texture(const std::string &file_path, core::core_renderer &render);
     void set_positon_x(const int &positon_x);
     void set_positon_y(const int &positon_y);
-    void set_position_center(std::shared_ptr<core::core_screen> screen);
+    void set_position_center(std::shared_ptr<core::core_screen> &screen);
     void set_width(const int &widht);
     void set_height(const int &height);
+
+    /**
+     * @brief configuiration methods (get)
+     *
+     * @details this section contains get methods prototypes
+     */
 
     const SDL_Rect &get_rectangle() const;
     SDL_Texture *get_texture() const;
@@ -46,6 +77,12 @@ struct object_rectangle_attributes
     int get_position_y() const;
     int get_width() const;
     int get_height() const;
+
+    /**
+     * @brief configuiration abstract moviments methods
+     *
+     * @details this section contains moviments methods prototypes
+     */
 
     void auto_move_x();
     void auto_move_x_negative();
@@ -59,14 +96,34 @@ struct object_rectangle_attributes
     bool colision_y(std::shared_ptr<object_rectangle_attributes> &other);
 };
 
+/**
+ * @class object_moviment
+ * @brief Class representing a primitive movement.
+ *
+ * @details detailsManages the attributes of an object's movements, including
+ * collision, velocity, gravity, and event click on the object.
+ * @note this class dont have anyone atribute
+ */
+
 class object_moviment
 {
   public:
+    /**
+     * @brief Default construtor class object_moviment
+     *
+     * @details the all params contructor is NULL
+     */
+
     object_moviment() = default;
+
+    /**
+     * @brief configuiration abstract moviments methods
+     *
+     * @details this section contains moviments methods prototypes
+     */
 
     void auto_move(std::shared_ptr<object_rectangle_attributes> &frame, std::shared_ptr<core::core_screen> &screen);
     void bellow_move(std::shared_ptr<object_rectangle_attributes> &frame, std::shared_ptr<core::core_screen> &screen);
-
     bool object_clicked(event::listener_event &event, std::shared_ptr<object_rectangle_attributes> &frame);
 };
 }; // namespace object
