@@ -30,15 +30,15 @@ int main()
 
     // player instance
     auto object_colision = std::make_shared<object::object_rectangle_attributes>();
-    object_colision->set_width(30);
-    object_colision->set_height(30);
+    object_colision->set_width(20);
+    object_colision->set_height(20);
     object_colision->set_position_center(screen);
-    object_colision->set_speed_x(5);
-    object_colision->set_speed_y(5);
+    object_colision->set_speed_x(7);
+    object_colision->set_speed_y(7);
 
     auto player = std::make_shared<object::object_rectangle_attributes>();
-    player->set_width(250);
-    player->set_height(30);
+    player->set_width(100);
+    player->set_height(20);
     player->set_position_center(screen);
     auto end_y = screen->get_height() - player->get_height();
     player->set_positon_y(end_y);
@@ -46,16 +46,12 @@ int main()
     player->set_speed_y(5);
 
     auto opponent = std::make_shared<object::object_rectangle_attributes>();
-    opponent->set_width(250);
-    opponent->set_height(30);
+    opponent->set_width(100);
+    opponent->set_height(20);
     opponent->set_position_center(screen);
     opponent->set_positon_y(0);
     opponent->set_speed_x(5);
     opponent->set_speed_y(5);
-
-    // fps limit
-    const int targetFPS = 60;
-    const int frameDelay = 1000 / targetFPS;
 
     // font instance
     auto font_asset = std::make_shared<asset::font>("../assets/fonts/font.ttf", 30);
@@ -69,16 +65,15 @@ int main()
 
     while (loop->get_running())
     {
-        Uint32 frameStart = SDL_GetTicks();
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (!loop->get_running())
         {
-            std::cerr << "Failed: loop is not running" << '\n';
             app->quit_sdl2(render);
             return -1;
         }
 
+        /* draw rectangle with sdl*/
         SDL_SetRenderDrawColor(render.renderer, 255, 255, 255, 255);
         SDL_RenderFillRect(render.renderer, &player->get_rectangle());
 
@@ -91,7 +86,8 @@ int main()
         SDL_RenderDrawLine(render.renderer, 0, screen->get_height() / 2, screen->get_height(),
                            screen->get_height() / 2);
 
-        SDL_Rect scoreRect = {0, 400, 0, 0}; // Posição do texto na tela
+        /* position rectangle on the screen */
+        SDL_Rect scoreRect = {0, 400, 0, 0};
         SDL_QueryTexture(font_asset->get_texture(), nullptr, nullptr, &scoreRect.w, &scoreRect.h);
         SDL_RenderCopy(render.renderer, font_asset->get_texture(), nullptr, &scoreRect);
 
@@ -106,6 +102,9 @@ int main()
         {
             object_colision->set_negative_speed_y();
         }
+
+        player->colision_width_screen(screen);
+        opponent->move_towards_with_randomness(object_colision, 5, 100);
 
         while (SDL_PollEvent(&events.event) != 0)
         {
@@ -140,15 +139,8 @@ int main()
         }
 
         SDL_RenderPresent(render.renderer);
-
-        // set fps delay
-        Uint32 frameTime = SDL_GetTicks() - frameStart;
-        if (frameDelay > frameTime)
-        {
-            SDL_Delay(frameDelay - frameTime);
-        }
-
         SDL_GL_SwapWindow(render.window);
+        SDL_Delay(12);
         continue;
     }
 
