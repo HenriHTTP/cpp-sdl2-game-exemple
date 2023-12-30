@@ -258,7 +258,43 @@ bool object_rectangle_attributes::colision_y(std::shared_ptr<object_rectangle_at
 
     return false;
 }
+//////////////////////////////////////////////////////////////////////////
 
+void object_rectangle_attributes::colision_width_screen(std::shared_ptr<core::core_screen> &screen)
+{
+    if (this->get_position_x() <= 0)
+    {
+        this->set_positon_x(0);
+    }
+    if (this->get_position_x() + this->get_width() >= screen->get_width())
+    {
+        this->set_positon_x(screen->get_width() - this->get_width());
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////
+void object_rectangle_attributes::move_towards_with_randomness(
+    const std::shared_ptr<object_rectangle_attributes> &target, int speed, int randomness)
+{
+    int target_x = target->get_position_x();
+    int target_y = target->get_position_y();
+
+    // Lógica básica para mover em direção ao alvo com uma velocidade constante
+    int delta_x = target_x - get_position_x();
+    int delta_y = target_y - get_position_y();
+
+    int distance = std::sqrt(delta_x * delta_x + delta_y * delta_y);
+
+    if (distance >= 10)
+    {
+        // Adiciona um componente aleatório ao movimento
+        int random_offset_x = (rand() % (2 * randomness + 1)) - randomness;
+
+        int move_x = ((delta_x + random_offset_x) * speed) / distance;
+
+        set_positon_x(get_position_x() + move_x);
+    }
+}
 //////////////////////////////////////////////////////////////////////////
 
 void object_rectangle_attributes::auto_gravity()
