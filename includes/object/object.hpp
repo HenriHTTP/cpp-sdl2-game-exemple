@@ -15,6 +15,8 @@
 namespace object
 {
 
+class object_rectangle_attributes
+
 /**
  * @class object_rectangle_attributes
  * @brief this class representing a primitive rectangle object.
@@ -23,7 +25,6 @@ namespace object
  * position, velocity, dimension, and texture.
  */
 
-class object_rectangle_attributes
 {
   private:
     /**
@@ -94,18 +95,22 @@ class object_rectangle_attributes
     void auto_gravity();
     bool colision_x(std::shared_ptr<object_rectangle_attributes> &other);
     bool colision_y(std::shared_ptr<object_rectangle_attributes> &other);
+    void colision_width_screen(std::shared_ptr<core::core_screen> &screen);
+    void move_towards_with_randomness(const std::shared_ptr<object_rectangle_attributes> &target, int speed,
+                                      int randomness);
 };
+
+class object_moviment
 
 /**
  * @class object_moviment
  * @brief Class representing a primitive movement.
  *
- * @details detailsManages the attributes of an object's movements, including
+ * @details Manages the attributes of an object's movements, including
  * collision, velocity, gravity, and event click on the object.
  * @note this class dont have anyone atribute
  */
 
-class object_moviment
 {
   public:
     /**
@@ -126,6 +131,7 @@ class object_moviment
     void bellow_move(std::shared_ptr<object_rectangle_attributes> &frame, std::shared_ptr<core::core_screen> &screen);
     bool object_clicked(event::listener_event &event, std::shared_ptr<object_rectangle_attributes> &frame);
 };
+
 }; // namespace object
 
 #endif // OBJECT_H
