@@ -42,8 +42,7 @@ int main()
     player->set_position_center(screen);
     auto end_y = screen->get_height() - player->get_height();
     player->set_positon_y(end_y);
-    player->set_speed_x(5);
-    player->set_speed_y(5);
+    player->set_speed_x(16);
 
     auto opponent = std::make_shared<object::object_rectangle_attributes>();
     opponent->set_width(100);
@@ -116,25 +115,23 @@ int main()
             {
                 if (events.event.key.keysym.sym == SDLK_d)
                 {
-                    player->set_speed_x(20);
                     player->auto_move_x();
                 }
                 if (events.event.key.keysym.sym == SDLK_a)
                 {
-                    player->set_speed_x(20);
                     player->auto_move_x_negative();
                 }
 
-                if (events.event.key.keysym.sym == SDLK_RIGHT)
-                {
-                    opponent->set_speed_x(20);
-                    opponent->auto_move_x();
-                }
-                if (events.event.key.keysym.sym == SDLK_LEFT)
-                {
-                    opponent->set_speed_x(20);
-                    opponent->auto_move_x_negative();
-                }
+                // if (events.event.key.keysym.sym == SDLK_RIGHT)
+                // {
+                //     opponent->set_speed_x(20);
+                //     opponent->auto_move_x();
+                // }
+                // if (events.event.key.keysym.sym == SDLK_LEFT)
+                // {
+                //     opponent->set_speed_x(20);
+                //     opponent->auto_move_x_negative();
+                // }
             }
         }
 
