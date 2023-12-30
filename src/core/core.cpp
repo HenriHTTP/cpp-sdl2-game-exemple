@@ -35,6 +35,7 @@ void core_running::set_running(bool new_state)
 {
     this->running = new_state;
 }
+
 bool core_running::get_running() const
 {
     return this->running;
@@ -84,6 +85,16 @@ bool core_sdl2::init_sdl2_ttf()
     if (TTF_Init() == -1)
     {
         std::cerr << "Failed: SDL_ttf could not initialize! SDL_ttf Error " << '\n';
+        return false;
+    }
+    return true;
+}
+
+bool core_sdl2::init_vsync(bool enable)
+{
+    auto result = SDL_GL_SetSwapInterval(enable ? 1 : 0);
+    if (result < 0)
+    {
         return false;
     }
     return true;
