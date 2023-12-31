@@ -3,6 +3,15 @@
 namespace core
 {
 
+/**
+ * @class core_rgb
+ * @brief this section contains implements set methods prototypes
+ *
+ * @namespace core::core_rgb
+ * @implements core_rgb
+ * @note this methods using this for set values
+ */
+
 void core_rgb::set_rgb(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
     this->red = r;
@@ -10,6 +19,15 @@ void core_rgb::set_rgb(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
     this->blue = b;
     this->alpha = a;
 }
+
+/**
+ * @class core_rgb
+ * @brief this section contains implements get methods prototypes
+ *
+ * @namespace core::core_rgb
+ * @implements core_rgb
+ * @note this methods using this for get values
+ */
 
 Uint8 core_rgb::get_red() const
 {
@@ -31,15 +49,42 @@ Uint8 core_rgb::get_alpha() const
     return this->alpha;
 }
 
+/**
+ * @class core_running
+ * @brief this section contains implements set methods prototypes
+ *
+ * @namespace core::core_running
+ * @implements core_running
+ * @note this methods using this for set values
+ */
+
 void core_running::set_running(bool new_state)
 {
     this->running = new_state;
 }
 
+/**
+ * @class core_running
+ * @brief this section contains implements get methods prototypes
+ *
+ * @namespace core::core_running
+ * @implements core_running
+ * @note this methods using this for set values
+ */
+
 bool core_running::get_running() const
 {
     return this->running;
 }
+
+/**
+ * @class core_screen
+ * @brief this section contains implements set methods prototypes
+ *
+ * @namespace core::core_screen
+ * @implements core_screen
+ * @note this methods using this for set values
+ */
 
 void core_screen::set_resolution(const int &w, const int &h)
 {
@@ -57,6 +102,15 @@ void core_screen::set_height(const int &h)
     this->height = h;
 }
 
+/**
+ * @class core_screen
+ * @brief this section contains implements get methods prototypes
+ *
+ * @namespace core::core_screen
+ * @implements core_screen
+ * @note this methods using this for get values
+ */
+
 int core_screen::get_width() const
 {
     return this->width;
@@ -66,6 +120,15 @@ int core_screen::get_height() const
 {
     return this->height;
 }
+
+/**
+ * @class core_sdl2
+ * @brief this section contains implements abstract methods prototypes
+ *
+ * @namespace core::core_screen
+ * @implements core_screen
+ * @note this methods is abstracition for primary configure sdl
+ */
 
 bool core_sdl2::init_sdl2()
 {

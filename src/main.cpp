@@ -29,34 +29,23 @@ int main()
     auto object = std::make_shared<object::object_moviment>();
 
     // player instance
-    auto object_colision = std::make_shared<object::object_rectangle_attributes>();
-    object_colision->set_width(20);
-    object_colision->set_height(20);
+    auto object_colision = std::make_shared<object::object_rectangle_attributes>(7, 7, 20, 20);
     object_colision->set_position_center(screen);
-    object_colision->set_speed_x(7);
-    object_colision->set_speed_y(7);
 
-    auto player = std::make_shared<object::object_rectangle_attributes>();
-    player->set_width(100);
-    player->set_height(20);
+    auto player = std::make_shared<object::object_rectangle_attributes>(16, 16, 100, 20);
     player->set_position_center(screen);
     auto end_y = screen->get_height() - player->get_height();
-    player->set_positon_y(end_y);
-    player->set_speed_x(16);
+    player->set_positon_y(end_y - player->get_height());
 
-    auto opponent = std::make_shared<object::object_rectangle_attributes>();
-    opponent->set_width(100);
-    opponent->set_height(20);
+    auto opponent = std::make_shared<object::object_rectangle_attributes>(16, 16, 100, 20);
     opponent->set_position_center(screen);
-    opponent->set_positon_y(0);
-    opponent->set_speed_x(5);
-    opponent->set_speed_y(5);
+    opponent->set_positon_y(opponent->get_height());
 
     // font instance
     auto font_asset = std::make_shared<asset::font>("../assets/fonts/font.ttf", 30);
     font_asset->set_ttf_font();
     SDL_Color font_color{255, 255, 255, 255};
-    font_asset->set_text_surface("score", font_color);
+    font_asset->set_text_surface("Ping Pong", font_color);
     font_asset->set_texture(render.renderer);
 
     // main loop
@@ -121,17 +110,6 @@ int main()
                 {
                     player->auto_move_x_negative();
                 }
-
-                // if (events.event.key.keysym.sym == SDLK_RIGHT)
-                // {
-                //     opponent->set_speed_x(20);
-                //     opponent->auto_move_x();
-                // }
-                // if (events.event.key.keysym.sym == SDLK_LEFT)
-                // {
-                //     opponent->set_speed_x(20);
-                //     opponent->auto_move_x_negative();
-                // }
             }
         }
 

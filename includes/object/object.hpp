@@ -46,6 +46,12 @@ class object_rectangle_attributes
      */
 
     object_rectangle_attributes() = default;
+    object_rectangle_attributes(const int &speed_x, const int &speed_y, const int &width, const int &height)
+        : speed_x(speed_x), speed_y(speed_y)
+    {
+        set_width(width);
+        set_height(height);
+    };
 
     /**
      * @brief configuiration methods (set)
